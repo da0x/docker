@@ -1,0 +1,12 @@
+FROM alpine
+RUN apk add openjdk11
+RUN apk add bash
+RUN wget https://apache.osuosl.org/kafka/2.8.0/kafka_2.13-2.8.0.tgz
+RUN tar -xzf kafka_2.13-2.8.0.tgz 
+RUN cd kafka_2.13-2.8.0/
+WORKDIR /kafka_2.13-2.8.0/
+RUN echo #!/bin/bash >> start.sh
+RUN echo "./bin/zookeeper-server-start.sh config/zookeeper.properties & ./bin/kafka-server-start.sh config/server.properties" >> start.sh
+RUN chmod +x start.sh
+ENV KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
+ENTRYPOINT ["/bin/bash", "start.sh"] 
